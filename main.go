@@ -8,8 +8,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
-//go:embed アプリ明朝.ttf
-var font []byte
+var (
+	screenWidth  = 480
+	screenHeight = 640
+
+	faceSource *text.GoTextFaceSource
+)
+
+func init() {
+	s, err := text.NewGoTextFaceSource(bytes.NewReader(fonts.MPlus1pRegular_ttf))
+	if err != nil {
+		log.Fatal(err)
+	}
+	faceSource = s
+}
 
 type Game struct{}
 
