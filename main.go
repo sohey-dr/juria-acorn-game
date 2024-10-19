@@ -1,15 +1,29 @@
 package main
 
 import (
+	"bytes"
 	_ "embed"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
-//go:embed アプリ明朝.ttf
-var font []byte
+var (
+	screenWidth  = 480
+	screenHeight = 640
+
+	faceSource *text.GoTextFaceSource
+)
+
+func init() {
+	s, err := text.NewGoTextFaceSource(bytes.NewReader(fonts.MPlus1pRegular_ttf))
+	if err != nil {
+		log.Fatal(err)
+	}
+	faceSource = s
+}
 
 type Game struct{}
 
@@ -18,16 +32,20 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, "Hello, World!")
+	const x = 20
+
+	drawText(screen, "sampleText", x, 80, FontMedium)
+	drawText(screen, "大文字だよ", x, 110, FontLarge)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return outsideWidth, outsideHeight
 }
 
 func main() {
-	ebiten.SetWindowSize(640, 480)
-	ebiten.SetWindowTitle("Hello, World!")
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Hello")
+
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)
 	}
